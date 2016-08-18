@@ -1,3 +1,5 @@
+import random
+
 def play_word_game():
     strikes = 0
     max_strikes = 3
@@ -17,7 +19,9 @@ def play_word_game():
 
 
 def get_random_word():
-    return "typewriter"
+    words = ["orange", "banana", "pineapple", "watermelon", "grapefruit", "honeydew", "mango", "papaya"]
+    word = words[random.randint(0, len(words) - 1)]
+    return word
 
 print("Game started")
 
