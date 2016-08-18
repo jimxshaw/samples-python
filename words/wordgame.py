@@ -5,12 +5,12 @@ def play_word_game():
     max_strikes = 3
     playing = True
     word = get_random_word()
-    masked_word = "_" * len(word)
+    masked_word = list("_" * len(word))
 
     while playing:
         show_word(masked_word)
         letter = get_guess()
-        is_letter_found = process_letter(letter, word)
+        is_letter_found = process_letter(letter, word, masked_word)
 
         strikes += 1
 
@@ -40,12 +40,13 @@ def get_guess():
     return input() 
 
 
-def process_letter(letter, secret_word):
+def process_letter(letter, secret_word, masked_word):
     result = False
 
     for i in range(0, len(secret_word)):
         if secret_word[i] == letter:
             result = True
+            masked_word[i] = letter
 
     return result
 
