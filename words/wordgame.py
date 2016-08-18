@@ -10,13 +10,18 @@ def play_word_game():
     while playing:
         show_word(masked_word)
         letter = get_guess()
-        is_letter_found = process_letter(letter, word, masked_word)
+        letter_is_found = process_letter(letter, word, masked_word)
 
-        strikes += 1
+        if not letter_is_found:
+            strikes += 1
+            print_strikes(strikes)
 
         if strikes >= max_strikes:
             playing = False
-    
+            
+        if not "_" in masked_word:
+            playing = False
+
     if strikes >= max_strikes:
         print("You lose")
     else:
@@ -47,8 +52,13 @@ def process_letter(letter, secret_word, masked_word):
         if secret_word[i] == letter:
             result = True
             masked_word[i] = letter
-
     return result
+
+
+def print_strikes(number_of_strikes):
+    for i in range(0, number_of_strikes):
+        print("X ", end="")
+    print("")
 
 
 print("Game started")
