@@ -1,6 +1,7 @@
 
 def go_shopping():
-    cart = []
+    # A set is used instead of a list because a set can only have unique items.
+    cart = set()
 
     while True:
         order = get_order()
@@ -27,9 +28,9 @@ def process_order(order, cart):
 
     if command == "a":
         # Add item to cart.
-        cart.append(item)
-    elif command == "d":
-        # Remove item from cart.
+        cart.add(item)
+    elif command == "d" and item in cart:
+        # Remove item from cart only if said item is in the cart.
         cart.remove(item)
     elif command == "q":
         return False
