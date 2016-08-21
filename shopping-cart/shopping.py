@@ -3,6 +3,11 @@ class Cart:
     def __init__(self):
         self._contents = dict()
 
+    # We're overriding the default implementation of this Python representation method.
+    # Think of this method as akin to C#'s .ToString method.
+    def __repr__(self):
+        return "{0} {1}".format(Cart, self.__dict__)
+
     def process(self, order):
         if order.add:
             # If the input item key is not in the cart, first set the value to 0
@@ -19,6 +24,9 @@ class Cart:
                 self._contents[order.item] -= 1
                 if self._contents[order.item] <= 0:
                     del self._contents[order.item]
+
+        print(self._contents)
+
 
 class Order:
     
@@ -55,5 +63,8 @@ order.get_input()
 while not order.quit:
     cart.process(order)
     order = Order()
-    order.get_input()    
+    order.get_input()
 
+# Since we overrode the __repr__ method in the Cart class, that implementation
+# will be printed instead of the detault __repr__ implementation.
+print(cart)
