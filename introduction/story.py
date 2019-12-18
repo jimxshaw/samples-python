@@ -1,9 +1,9 @@
+import sys
 from urllib.request import urlopen
 
 
-def fetch_words():
-    story = urlopen("http://sixty-north.com/c/t.txt")
-
+def fetch_words(url):
+    story = urlopen(url)
     story_words = []
 
     for line in story:
@@ -13,9 +13,18 @@ def fetch_words():
 
     story.close()
 
-    for word in story_words:
-        print(word)
+    return story_words
+
+
+def print_items(items):
+    for item in items:
+        print(item)
+
+
+def main(url):
+    words = fetch_words(url)
+    print_items(words)
 
 
 if __name__ == "__main__":
-    fetch_words()
+    main(sys.argv[1])
