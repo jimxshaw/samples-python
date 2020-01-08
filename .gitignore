@@ -109,8 +109,4 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-<<<<<<< HEAD
-=======
-# IDE/Editor
->>>>>>> 0b3b01279eea4dc1615ef521eb870859b4d8c730
 .vscode
