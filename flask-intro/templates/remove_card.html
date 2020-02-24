@@ -10,7 +10,7 @@
     Answer: {{ card.answer }}
 
     <h2>Are you sure?</h2>
-    <form action="post">
+    <form method="post">
         <button type="submit">Yes</button>
         <a href="{{ url_for('welcome') }}">No</a>
     </form>
