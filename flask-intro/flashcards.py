@@ -23,6 +23,11 @@ def card_view(index):
         abort(404)
 
 
+@app.route("/add_card")
+def add_card():
+    return render_template("add_card.html")
+
+
 @app.route("/api/cards/")
 def api_card_list():
     return jsonify(db)
