@@ -28,13 +28,19 @@ def card_view(index):
 def add_card():
     if request.method == "POST":
         # form has been submitted, process data
-        card = { "question": request.form["question"],
-                 "answer": request.form["answer"] }
+        card = {"question": request.form["question"],
+                "answer": request.form["answer"]}
         db.append(card)
         save_db()
         return redirect(url_for("card_view", index=len(db) - 1))
     else:
         return render_template("add_card.html")
+
+
+@app.route("/remove_card/<int:index>", methods=["GET", "POST"])
+def remove_card(index):
+    card = db[index]
+    return render_template("remove_card.html", card=card, index=index)
 
 
 @app.route("/api/cards/")
