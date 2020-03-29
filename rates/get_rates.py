@@ -1,5 +1,7 @@
 import requests
+from box import Box
 
-request = requests.get("https://api.exchangeratesapi.io/latest?symbols=USD")
+response = requests.get("https://api.exchangeratesapi.io/latest?symbols=USD")
+b = Box(response.json())
 
-print(request)
+print(f"1 Euro is {b.rates.USD} dollars.")
