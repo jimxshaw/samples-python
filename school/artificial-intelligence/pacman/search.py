@@ -73,7 +73,59 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # DFS uses a LIFO stack. We set up our frontier by instantiating and
+    # assigning the stack to it.
+    frontier = util.Stack()
+
+    # We have to figure out where to start so we get the start state.
+    startState = problem.getStartState()
+
+    # It's not enough to just push the state on to our stack because we don't have
+    # the tree visually in front of us to look at. So we must push a pair that has
+    # the state and the path to get there. When we eventually get to the goal then
+    # whatever path we have currently will be the answer path.
+    startPath = []
+    frontier.push((startState, startPath))
+
+    # We use a set to track the states where we've been because we only care
+    # about have we ever expanded these states before.
+    visited = set()
+
+    # We keep lopping as long as there are more to explore. If the frontier becomes
+    # empty and we haven't hit the goal then there is no solution.
+    while not frontier.isEmpty():
+        # Pop the next pair node to expand.
+        currentState, pathSoFar = frontier.pop()
+
+        # We have to ask if we've already expanded this state before.
+        # If we have then we skip it and go pop the next one.
+        if currentState in visited:
+            continue
+
+        # At expansion time we mark this state as visited.
+        visited.add(currentState)
+
+        # Check if we've reached the goal. This goal check happens
+        # at expansion time. 
+        if problem.isGoalState(currentState):
+            return pathSoFar
+
+        # Coming here means we haven't reach the goal. So we generate
+        # the successors and push them on to the frontier.
+        successors = problem.getSuccessors(currentState)
+
+        for successorState, action, stepCost in successors:
+            # Only pushing the successor state if we haven't already expanded it.
+            # This is done because we don't want to fill the stack with unnecessary states.
+            if successorState not in visited:
+                # We build a new path by specifically creating a new list.
+                # Having a new list is critical because each frontier entry 
+                # must have its own independent path.
+                newPath = pathSoFar + [action]
+                frontier.push((successorState, newPath))
+
+    # If we reach here then there is no solution. 
+    return None
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
