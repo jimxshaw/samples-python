@@ -410,7 +410,61 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    # We unpack as usual into the same shape as the others (position, cornersVisited).
+    currentPosition, cornersVisited = state
+
+    unvisitedCorners = []
+
+    # We have to figure out which corner(s) have not been visited yet.
+    # So corners[i] and cornersVisited[i] are in parallel so we walk both by the
+    # same index and only keep the coordinate if its flag is still False.
+    for cornerIndex in range(len(corners)):
+        hasThisCornerBeenVisited = cornersVisited[cornerIndex]
+
+        if not hasThisCornerBeenVisited:
+            cornerCoordinate = corners[cornerIndex]
+            unvisitedCorners.append(cornerCoordinate)
+
+
+    # This scenario means we are at a goal state and there is nothing left to reach
+    # so the cost is exactly 0. 
+    if len(unvisitedCorners) == 0:
+        return 0
+
+    # Here we chain together the nearest hops estimate. 
+    totalEstimatedCost = 0
+    currentPositionInTheChain = currentPosition
+
+    # We remove corners from this list as we visit them. We make a copy
+    # because we never want to modify the original unvisitedCorners list.
+    remainingCornersToVisit = list(unvisitedCorners)
+
+    while len(remainingCornersToVisit) > 0:
+        # We find whatever remaining corner is nearest to wherever we currently are
+        # in the chain. We do this manually in a loop so that every step is visible.
+        nearestCornerSoFar = None
+        nearestDistanceSoFar = None
+
+        for candidateCorner in remainingCornersToVisit:
+            distanceToCandidate = util.manhattanDistance(currentPositionInTheChain, candidateCorner)
+
+            if nearestCornerSoFar is None or distanceToCandidate < nearestDistanceSoFar:
+                nearestDistanceSoFar = distanceToCandidate
+                nearestCornerSoFar = candidateCorner
+
+        # Add the hop's distance to our running total. This is one leg of the 
+        # imagined straight line route.
+        totalEstimatedCost = totalEstimatedCost + nearestDistanceSoFar
+
+        # We pretend we've now reached that corner so we update our imagined position
+        # and remove that corner from the list of remaining stops to prevent
+        # us from visiting it again.
+        currentPositionInTheChain = nearestCornerSoFar
+        remainingCornersToVisit.remove(nearestCornerSoFar)
+
+    # Return the total estimate of remaining cost. It will never be negative
+    # because manhattan distance can't be negative. 
+    return totalEstimatedCost
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
