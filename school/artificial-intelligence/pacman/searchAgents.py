@@ -285,14 +285,34 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # State is a pair of (position, cornersVisited) where cornersVisited is a
+        # tuple of 4 booleans, one of each of the corners.
+
+        # We must use a tuple instead of a list or dictionary because the states must
+        # be hashable in order to work inside a python set and for inside frontier
+        # comparisons.
+
+        # The order of the corners is: (Northwest, Northeast, Southwest, Southeast).
+        cornersVisitedAtStart = (False, False, False, False)
+
+        startState = (self.startingPosition, cornersVisitedAtStart)
+
+        return startState
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # We unpack the state into two pieces. We don't need the position piece
+        # because the goal only depends on if every corner has been visited.
+        position, cornersVisited = state
+
+        # This function only checks if all corners have been visited. It
+        # doesn't update cornersVisited because that happens in getSuccessors.
+        allCornersVisited = all(cornersVisited)
+
+        return allCornersVisited
 
     def getSuccessors(self, state: Any):
         """
@@ -305,16 +325,56 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
 
+        # We unpack the current state before the loop so that every successor we 
+        # generate below starts from the same current position and the same
+        # current cornersVisited tuple.
+        currentPosition, cornersVisited = state
+
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            x,y = currentPosition
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
+            if not hitsWall:
+                nextPosition = (nextx, nexty)
+
+                # We build a new cornersVisited tuple for the successor. We never
+                # modify the old cornersVisited in place. This is the same as in DFS
+                # where each state gets its own copy.
+
+                # We build a list for now and then convert to tuple later.
+                newCornersVisitedList = []
+
+                # We walk through each of the 4 corners by index and decide what
+                # the flag should be in the new state.
+                for cornerIndex in range(len(self.corners)):
+                    cornerCoordinate = self.corners[cornerIndex]
+
+                    hasAlreadyVisited = cornersVisited[cornerIndex]
+
+                    if hasAlreadyVisited:
+                        newCornersVisitedList.append(True)
+                    elif nextPosition == cornerCoordinate:
+                        newCornersVisitedList.append(True)
+                    else:
+                        newCornersVisitedList.append(False)
+
+                # We convert the list back to a tuple because the states
+                # must be hashable and only python tuples are hashable. 
+                newCornersVisited = tuple(newCornersVisitedList)
+
+                # Put together the successor state in the same shape as 
+                # getStartState's return value of (position, cornersVisited).
+                nextState = (nextPosition, newCornersVisited)
+
+                # This is 1 because every move costs 1 in this problem.
+                stepCost = 1
+
+                successors.append((nextState, action, stepCost))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
