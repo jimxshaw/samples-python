@@ -4,12 +4,10 @@ loader.py: reads the input files into plain Python data.
 .var file has one variable per line:
     A: 1 2 3 4 5
     F: 1 2           
-    NOTE: lines may have trailing spaces!
 
 .con file has one constraint per line where operator is one of  =  !  >  <
     A > B
     D = E            
-    NOTE: the last line may have no newline at the end!
 """
 
 # Reads in a .var file.
@@ -58,9 +56,23 @@ def load_variables(path):
 # Returns a list of tuples of (left_var, operator, right_var) in file order
 #   [('A', '>', 'B'), ('B', '>', 'F'), ..., ('D', '=', 'E')]
 def load_constraints(path):
-    """
-      - skip blank lines
-      - .split() with no argument splits on any whitespace -> 3 pieces
-    """
-    # TODO: step 1
-    raise NotImplementedError("load_constraints")
+    # This will be a list filled with 3 item tuples.
+    constraints = []
+
+    with open(path) as file:
+        for raw_line in file:
+            line = raw_line.strip()
+
+            if not line:
+                continue
+
+            # Input of "A > B".split() would output ["A", ">", "B"].
+            # If a line has fewer than or more than 3 pieces then Python
+            # would raise an error.
+            left_variable, operator, right_variable = line.split()
+ 
+            constraints.append((left_variable, operator, right_variable))
+
+    
+    return constraints
+
