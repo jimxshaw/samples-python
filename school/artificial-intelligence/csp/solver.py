@@ -107,15 +107,23 @@ def order_domain_values(var, domains, assignment, constraints):
 # Build one output line. Must match the sample .out file exactly.
 # E.g. "1. F=1, E=1, A=5, B=1  failure"
 #      "3. F=1, E=1, A=5, B=2, C=2, D=1  solution"
-def format_branch(branch_number, assignment, status):
-    """
-      - branch number, then a period, then ONE space
-      - "NAME=value" with no spaces around '='
-      - pairs separated by ", "
-      - TWO spaces before "failure" / "solution"
-    """
-    # TODO: step 3
-    raise NotImplementedError("format_branch")
+def format_branch(branch_number, assignment, status):    
+    pair_strings = []
+
+    # Turn each (name, value) pair into a "NAME=value" string.
+    # Assignment is a list in the order the search made
+    # the assignments like [('F', 1), ('E', 1), ('A', 5)] so
+    # the output keeps that order.
+    for variable_name, value in assignment:
+        pair_strings.append(variable_name + "=" + str(value))
+
+    # E.g. ["F=1", "E=1", "A=5"] becomes "F=1, E=1, A=5".
+    pairs_text = ", ".join(pair_strings)
+
+    # Status is the word "failure" or "solution" input by the caller.
+    line = str(branch_number) + ". " + pairs_text + "  " + status
+
+    return line
 
 # Run backtracking search and return the list of formatted branch lines
 # with every failed branch plus the solution line if one is found.
