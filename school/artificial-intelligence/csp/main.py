@@ -47,6 +47,5 @@ def main():
     for line in branch_lines:
         print(line)
 
-
 if __name__ == "__main__":
     main()
