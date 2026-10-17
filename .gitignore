@@ -114,3 +114,10 @@ dmypy.json
 
 .DS_Store
 .idea/
+
+*.identifier
+*.Identifier
+.*identifier*
+.*Identifier*
+*.id
+*.meta
