@@ -33,13 +33,36 @@ OPERATORS = {
 
 # Returns True if giving var1 = var1 and var2 = var2 breaks no 
 # constraints between var1 and var2.
-def satisfies(constraints, var1, val1, var2, val2):
-    """
-    Warning: a constraint ('A', '>', 'B') must also be checked when you are
-    asked about (B, A) -- the order of the arguments may be flipped.
-    """
-    # TODO: step 2
-    raise NotImplementedError("satisfies")
+def satisfies(constraints, var1, value1, var2, value2):
+    # Look at every constraint one at a time and unpack them into 3 pieces.
+    for left_variable, operator, right_variable in constraints:
+        # Convert the operator symbol into a test function.
+        test = OPERATORS[operator]
+
+        # Scenario 1: here the constraint is written in the same order
+        # we were asked about: (var1, operator, var2). So we plug in the
+        # values as is: value1 operator value2.
+        if left_variable == var1 and right_variable == var2:
+            if not test(value1, value2):
+                # Even one broken rule is enough to fail.
+                return False
+
+        # Scenario 2: here the constraint is flipped: (var2, operator, var1).
+        # So we keep the constraint's order and put each value with its own 
+        # variable: value2 operator value1.
+        # E.g. constraint ('A', '>' 'B') and asked about B = 2, A = 5
+        #       so we test 5 > 2 with the A value on the left and NOT 2 > 5.
+        elif left_variable == var2 and right_variable == var1:
+            if not test(value2, value1):
+                return False
+
+        # Scenario 3: here the constraint is not between var1 and var2
+        # so we skip it.
+
+    # Getting here means every constraint was checked between the pair
+    # and none failed. This also covers the scenario where no constraint
+    # links the pair. With no rules between them then any two values are allowed. 
+    return True
 
 # Returns the set of variables that share at least one constraint with var.
 # E.g. neighbors(constraints, 'A') -> {'B', 'C', 'D'}
