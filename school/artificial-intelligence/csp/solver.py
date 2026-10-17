@@ -44,8 +44,30 @@ def satisfies(constraints, var1, val1, var2, val2):
 # Returns the set of variables that share at least one constraint with var.
 # E.g. neighbors(constraints, 'A') -> {'B', 'C', 'D'}
 def neighbors(constraints, var):
-    # TODO: step 2
-    raise NotImplementedError("neighbors")
+    # A set holds each name at most once so if two constraints link the same
+    # pair of variables then that neighbor is still listed only once.
+    neightbor_set = set()
+
+    # Look at every constraint one at a time. Each constraint is a 3 item
+    # tuple like ('A', '>', 'B'). We unpack the tuple by giving each
+    # piece its own name.
+    for left_variable, operator, right_variable in constraints:
+        # Scenario 1: if var is on the LEFT side then the other variable
+        # is on the right.
+        if left_variable == var:
+            neightbor_set.add(right_variable)
+        # Scenario 2: if var is on the RIGHT side then the other variable
+        # is on the left.
+        elif right_variable == var:
+            neightbor_set.add(left_variable)
+
+        # Scenario 3: if var is on neither side then we skip it because
+        # this constraint has nothing to do with var.
+
+        # The unpacked operator is not used because neighbors only cares
+        # about who is connect and not how they're connected.    
+
+    return neightbor_set
 
 # Returns the name of the next variable to assign using
 # most constrained -> most constraining -> alphabetical.
