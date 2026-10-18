@@ -15,11 +15,11 @@ for var in tests/*.var; do
         if [ -s "$errfile" ]; then
             echo "CRASH $(basename "$base") $mode"; fail=$((fail+1))
             sed 's/^/      /' "$errfile"
-        elif diff <(echo "$actual") "$expected" > /dev/null; then
+        elif diff <(echo "$actual") <(sed -e '$a\' "$expected") > /dev/null; then
             echo "PASS  $(basename "$base") $mode"; pass=$((pass+1))
         else
             echo "FAIL  $(basename "$base") $mode"; fail=$((fail+1))
-            diff <(echo "$actual") "$expected" | sed 's/^/      /'
+            diff <(echo "$actual") <(sed -e '$a\' "$expected") | sed 's/^/      /'
         fi
     done
 done
