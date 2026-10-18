@@ -275,7 +275,45 @@ def solve(domains, constraints, use_forward_checking):
                     next_domains[name] = list(current_domains[name])
                 next_domains[variable] = [value]
 
-                # TODO: Forward checking will go here.
+                # Forward Checking only in "fc" mode.
+                # Look ahead, for every unassigned neighbor of the variable we just we
+                # throw away the values tha tno longer work with variable = value.
+                # If some neighbor ends up with nothing left, it can never be assigned
+                # so this branch is already dead. Record it as a failure now
+                # instead of discovering it later.
+                if use_forward_checking:
+                    # Names that have a value including the one just chosen.
+                    assigned_names = set()
+                    for assigned_name, assigned_value in new_assignment:
+                        assigned_names.add(assigned_name)
+
+                    domain_wiped_out = False
+
+                    for neighbor in neighbors(constraints, variable):
+                        # Assigned neighbors were already checked above.
+                        if neighbor in assigned_names:
+                            continue
+
+                        # Keep only the neighbor's values that still work.
+                        # We edit next_domains (our private COPY), so the
+                        # pruning is undone automatically if we backtrack.
+                        surviving_values = []
+                        for neighbor_value in next_domains[neighbor]:
+                            if satisfies(constraints, variable, value, neighbor, neighbor_value):
+                                surviving_values.append(neighbor_value)
+                        next_domains[neighbor] = surviving_values
+
+                        # Empty domain = this neighbor has no possible value.
+                        if len(surviving_values) == 0:
+                            domain_wiped_out = True
+                            # No need to prune the remaining neighbors.
+                            break    
+
+                    if domain_wiped_out:
+                        line_number = len(branch_lines) + 1
+                        branch_lines.append(format_branch(line_number, new_assignment, "failure"))
+                        # Try the next value for this variable.
+                        continue 
 
                 # Recursion here, go one level deeper with the bigger assignment.
                 # If that finds a solution, stop here too and pass True up.
