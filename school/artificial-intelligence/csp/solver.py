@@ -124,9 +124,13 @@ def select_unassigned_variable(domains, assignment, constraints):
         # restrict any future choice anymore.
         degree = 0
         for left_variable, operator, right_variable in constraints:
-            if left_variable == candidate and right_variable not in assigned_names and right_variable != candidate:
+            if (left_variable == candidate 
+                    and right_variable not in assigned_names 
+                    and right_variable != candidate):
                 degree += 1
-            elif right_variable == candidate and left_variable not in assigned_names and left_variable != candidate:
+            elif (right_variable == candidate 
+                    and left_variable not in assigned_names 
+                    and left_variable != candidate):
                 degree += 1
 
         # Decide if this candidate beats the best so far.
