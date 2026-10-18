@@ -8,7 +8,7 @@ This file only puts things together. The real functionalities are in:
     loader.py: reads the .var and .con files into Python data.
     solver.py: runs backtracking search, with or without forward checking.
 
-Requiments: stdout is graded byte-for-byte. Only the branch lines may be
+Requirements: stdout is graded byte-for-byte. Only the branch lines may be
 printed to stdout. Send any debugging output to stderr instead:
     print("debug stuff", file=sys.stderr)
 """

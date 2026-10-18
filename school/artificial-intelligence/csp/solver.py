@@ -267,7 +267,7 @@ def solve(domains, constraints, use_forward_checking):
                 continue
 
             # Make a copy of the domains for the next level and fix this variable's
-            # domain to just he chosen value. Copying means anything the next level
+            # domain to just the chosen value. Copying means anything the next level
             # changes is thrown away automatically when we come back up. That is
             # the "undo" of backtracking.
             next_domains = {}                
@@ -277,7 +277,7 @@ def solve(domains, constraints, use_forward_checking):
 
             # Forward Checking only in "fc" mode.
             # Look ahead, for every unassigned neighbor of the variable we just we
-            # throw away the values tha tno longer work with variable = value.
+            # throw away the values that no longer work with variable = value.
             # If some neighbor ends up with nothing left, it can never be assigned
             # so this branch is already dead. Record it as a failure now
             # instead of discovering it later.
