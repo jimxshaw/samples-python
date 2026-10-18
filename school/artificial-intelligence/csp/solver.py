@@ -149,8 +149,45 @@ def select_unassigned_variable(domains, assignment, constraints):
 # Return var's current domain values as a list sorted by
 # least constraining value. Ties goes to smaller value first.
 def order_domain_values(var, domains, assignment, constraints):
-    # TODO: step 4 (start with plain ascending order in step 3)
-    raise NotImplementedError("order_domain_values")
+    # First, which neighbors of var are still unassigned? Only
+    # their options matter, meaning assigned variables have
+    # nothing left to rule out.
+    assigned_names = set()
+    for variable_name, value in assignment:
+        assigned_names.add(variable_name)
+
+    unassigned_neighbors = []
+    for neighbor in neighbors(constraints, var):
+        if neighbor not in assigned_names:
+            unassigned_neighbors.append(neighbor)
+
+    # Second, for each candidate value, count how many neighbor values it
+    # would rule out. 
+    # E.g. Choosing A=5 under "A > B" rules out only B=5. 
+    #       Choosing A=2 rules out B=2, B=3, B=4, B=5. Fewer is better.
+    scored_values = [] # Will hold (ruled_out_count, value) pairs.
+
+    for value in domains[var]:
+        ruled_out_count = 0
+        for neighbor in unassigned_neighbors:
+            for neighbor_value in domains[neighbor]:
+                if not satisfies(constraints, var, value, neighbor, neighbor_value):
+                    ruled_out_count += 1
+        scored_values.append((ruled_out_count, value))
+
+    # Third, sort the pairs. Python sorts tuples item by item, such as 
+    # sorting by last name then first name.
+    #   - First by ruled_out_count, smallest first. (least constraining)
+    #   - On a tie, by value, smallest first. (the tie-breaker)
+    # so both rules come from this one sort.
+    scored_values.sort()
+    
+    # Fourth, strip off the counts and return just the values in order.
+    ordered_values = []
+    for ruled_out_count, value in scored_values:
+        ordered_values.append(value)
+
+    return ordered_values
 
 # Build one output line. Must match the sample .out file exactly.
 # E.g. "1. F=1, E=1, A=5, B=1  failure"
