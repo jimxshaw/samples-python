@@ -69,7 +69,7 @@ def satisfies(constraints, var1, value1, var2, value2):
 def neighbors(constraints, var):
     # A set holds each name at most once so if two constraints link the same
     # pair of variables then that neighbor is still listed only once.
-    neightbor_set = set()
+    neighbor_set = set()
 
     # Look at every constraint one at a time. Each constraint is a 3 item
     # tuple like ('A', '>', 'B'). We unpack the tuple by giving each
@@ -78,11 +78,11 @@ def neighbors(constraints, var):
         # Scenario 1: if var is on the LEFT side then the other variable
         # is on the right.
         if left_variable == var:
-            neightbor_set.add(right_variable)
+            neighbor_set.add(right_variable)
         # Scenario 2: if var is on the RIGHT side then the other variable
         # is on the left.
         elif right_variable == var:
-            neightbor_set.add(left_variable)
+            neighbor_set.add(left_variable)
 
         # Scenario 3: if var is on neither side then we skip it because
         # this constraint has nothing to do with var.
@@ -90,7 +90,7 @@ def neighbors(constraints, var):
         # The unpacked operator is not used because neighbors only cares
         # about who is connect and not how they're connected.    
 
-    return neightbor_set
+    return neighbor_set
 
 # Returns the name of the next variable to assign using
 # most constrained -> most constraining -> alphabetical.
@@ -220,111 +220,111 @@ def solve(domains, constraints, use_forward_checking):
     # Every branch line we produce goes here in order. 
     branch_lines = []
 
-        # Recursive helper function is defined here so it can see the branch_lines list,
-        # constraints and use_forward_checking boolean without passing them
-        # around every call.
-        #   assignment: list of (name, value) pairs made so far in order.
-        #   current_domains: dictionary name of list of values still allowed.
-        # Returns True as soon as a solution is found, so every caller up to the chain
-        # can stop, or returns False if this whole subtree is a dead end.
-        def backtrack(assignment, current_domains):
-            # Base case: every variable has a value so this is the solution.
-            if len(assignment) == len(domains):
-                line_number = len(branch_lines) + 1
-                branch_lines.append(format_branch(line_number, assignment, "solution"))
-                
-                return True
-
-            # Choose which variable is next then the order to try its values.
-            variable = select_unassigned_variable(current_domains, 
-                                                    assignment, 
-                                                    constraints)
-            ordered_values = order_domain_values(variable, 
-                                                    current_domains, 
-                                                    assignment,
-                                                    constraints)
+    # Recursive helper function is defined here so it can see the branch_lines list,
+    # constraints and use_forward_checking boolean without passing them
+    # around every call.
+    #   assignment: list of (name, value) pairs made so far in order.
+    #   current_domains: dictionary name of list of values still allowed.
+    # Returns True as soon as a solution is found, so every caller up to the chain
+    # can stop, or returns False if this whole subtree is a dead end.
+    def backtrack(assignment, current_domains):
+        # Base case: every variable has a value so this is the solution.
+        if len(assignment) == len(domains):
+            line_number = len(branch_lines) + 1
+            branch_lines.append(format_branch(line_number, assignment, "solution"))
             
-            for value in ordered_values:
-                # The branch we're about to try is everything so far plus this one.
-                # Build a new list so the original is not touched and the next
-                # loop iteration starts clean.
-                new_assignment = assignment + [(variable, value)]
+            return True
 
-                # Consistency check asks does variable = value break a constraint
-                # with any variable that is already assigned?
-                is_consistent = True
+        # Choose which variable is next then the order to try its values.
+        variable = select_unassigned_variable(current_domains, 
+                                                assignment, 
+                                                constraints)
+        ordered_values = order_domain_values(variable, 
+                                                current_domains, 
+                                                assignment,
+                                                constraints)
+        
+        for value in ordered_values:
+            # The branch we're about to try is everything so far plus this one.
+            # Build a new list so the original is not touched and the next
+            # loop iteration starts clean.
+            new_assignment = assignment + [(variable, value)]
 
-                for assigned_name, assigned_value in assignment:
-                    if not satisfies(constraints, variable, value, assigned_name, assigned_value):
-                        is_consistent = False
-                        # One broken constraint is enough.
-                        break
+            # Consistency check asks does variable = value break a constraint
+            # with any variable that is already assigned?
+            is_consistent = True
 
-                if not is_consistent:
-                    # Dead end: record this branch as a failure, try next value.
+            for assigned_name, assigned_value in assignment:
+                if not satisfies(constraints, variable, value, assigned_name, assigned_value):
+                    is_consistent = False
+                    # One broken constraint is enough.
+                    break
+
+            if not is_consistent:
+                # Dead end: record this branch as a failure, try next value.
+                line_number = len(branch_lines) + 1
+                branch_lines.append(format_branch(line_number, new_assignment, "failure"))
+                continue
+
+            # Make a copy of the domains for the next level and fix this variable's
+            # domain to just he chosen value. Copying means anything the next level
+            # changes is thrown away automatically when we come back up. That is
+            # the "undo" of backtracking.
+            next_domains = {}                
+            for name in current_domains:
+                next_domains[name] = list(current_domains[name])
+            next_domains[variable] = [value]
+
+            # Forward Checking only in "fc" mode.
+            # Look ahead, for every unassigned neighbor of the variable we just we
+            # throw away the values tha tno longer work with variable = value.
+            # If some neighbor ends up with nothing left, it can never be assigned
+            # so this branch is already dead. Record it as a failure now
+            # instead of discovering it later.
+            if use_forward_checking:
+                # Names that have a value including the one just chosen.
+                assigned_names = set()
+                for assigned_name, assigned_value in new_assignment:
+                    assigned_names.add(assigned_name)
+
+                domain_wiped_out = False
+
+                for neighbor in neighbors(constraints, variable):
+                    # Assigned neighbors were already checked above.
+                    if neighbor in assigned_names:
+                        continue
+
+                    # Keep only the neighbor's values that still work.
+                    # We edit next_domains (our private COPY), so the
+                    # pruning is undone automatically if we backtrack.
+                    surviving_values = []
+                    for neighbor_value in next_domains[neighbor]:
+                        if satisfies(constraints, variable, value, neighbor, neighbor_value):
+                            surviving_values.append(neighbor_value)
+                    next_domains[neighbor] = surviving_values
+
+                    # Empty domain = this neighbor has no possible value.
+                    if len(surviving_values) == 0:
+                        domain_wiped_out = True
+                        # No need to prune the remaining neighbors.
+                        break    
+
+                if domain_wiped_out:
                     line_number = len(branch_lines) + 1
                     branch_lines.append(format_branch(line_number, new_assignment, "failure"))
-                    continue
+                    # Try the next value for this variable.
+                    continue 
 
-                # Make a copy of the domains for the next level and fix this variable's
-                # domain to just he chosen value. Copying means anything the next level
-                # changes is thrown away automatically when we come back up. That is
-                # the "undo" of backtracking.
-                next_domains = {}                
-                for name in current_domains:
-                    next_domains[name] = list(current_domains[name])
-                next_domains[variable] = [value]
+            # Recursion here, go one level deeper with the bigger assignment.
+            # If that finds a solution, stop here too and pass True up.
+            if backtrack(new_assignment, next_domains):
+                return True
 
-                # Forward Checking only in "fc" mode.
-                # Look ahead, for every unassigned neighbor of the variable we just we
-                # throw away the values tha tno longer work with variable = value.
-                # If some neighbor ends up with nothing left, it can never be assigned
-                # so this branch is already dead. Record it as a failure now
-                # instead of discovering it later.
-                if use_forward_checking:
-                    # Names that have a value including the one just chosen.
-                    assigned_names = set()
-                    for assigned_name, assigned_value in new_assignment:
-                        assigned_names.add(assigned_name)
+            # Otherwise the loop moves on to the next value.
 
-                    domain_wiped_out = False
-
-                    for neighbor in neighbors(constraints, variable):
-                        # Assigned neighbors were already checked above.
-                        if neighbor in assigned_names:
-                            continue
-
-                        # Keep only the neighbor's values that still work.
-                        # We edit next_domains (our private COPY), so the
-                        # pruning is undone automatically if we backtrack.
-                        surviving_values = []
-                        for neighbor_value in next_domains[neighbor]:
-                            if satisfies(constraints, variable, value, neighbor, neighbor_value):
-                                surviving_values.append(neighbor_value)
-                        next_domains[neighbor] = surviving_values
-
-                        # Empty domain = this neighbor has no possible value.
-                        if len(surviving_values) == 0:
-                            domain_wiped_out = True
-                            # No need to prune the remaining neighbors.
-                            break    
-
-                    if domain_wiped_out:
-                        line_number = len(branch_lines) + 1
-                        branch_lines.append(format_branch(line_number, new_assignment, "failure"))
-                        # Try the next value for this variable.
-                        continue 
-
-                # Recursion here, go one level deeper with the bigger assignment.
-                # If that finds a solution, stop here too and pass True up.
-                if backtrack(new_assignment, next_domains):
-                    return True
-
-                # Otherwise the loop moves on to the next value.
-
-            # Every value for this variable failed so this subtree is a dead end.
-            # Return False so the level above tries its next value.
-            return False
+        # Every value for this variable failed so this subtree is a dead end.
+        # Return False so the level above tries its next value.
+        return False
 
     # Kick off the search where nothing is assigned yet with full original domains.
     backtrack([], domains)
