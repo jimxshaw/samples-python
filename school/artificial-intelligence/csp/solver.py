@@ -95,8 +95,56 @@ def neighbors(constraints, var):
 # Returns the name of the next variable to assign using
 # most constrained -> most constraining -> alphabetical.
 def select_unassigned_variable(domains, assignment, constraints):
-    # TODO: step 4 (start with plain alphabetical in step 3)
-    raise NotImplementedError("select_unassigned_variable")
+    # First, figure out which variables still need a value.
+    assigned_names = set()
+    for variable_name, value in assignment:
+        assigned_names.add(variable_name)
+
+    unassigned_names = []
+    for variable_name in domains:
+        if variable_name not in assigned_names:
+            unassigned_names.append(variable_name)
+
+    # Second, walk the candidates in alphabetical order and keep the best
+    # one seen so far. Because we go alphabetically and only replace the
+    # current best when a candidate is strictly better. A full tie is 
+    # automatically won by the alphabetically first name.
+    best_name = None
+    best_domain_size = None
+    best_degree = None
+
+    for candidate in sorted(unassigned_names):
+        # Rule 1: most constrained is the fewest values
+        # left, meaning smaller wins.
+        domain_size = len(domains[candidate])
+
+        # Rule 2: most constraining is involved in the most constraints with
+        # other unassigned variables, meaning bigger wins. Constrains with
+        # already assigned variables don't count because they can't 
+        # restrict any future choice anymore.
+        degree = 0
+        for left_variable, operator, right_variable in constraints:
+            if left_variable == candidate and right_variable not in assigned_names and right_variable != candidate:
+                degree += 1
+            elif right_variable == candidate and left_variable not in assigned_names and left_variable != candidate:
+                degree += 1
+
+        # Decide if this candidate beats the best so far.
+        if best_name is None:
+            is_better = True # First candidate.
+        elif domain_size < best_domain_size:
+            is_better = True # Rule 1 decides.
+        elif domain_size == best_domain_size and degree > best_degree:
+            is_better = True # Tie means rule 2 decides.
+        else:
+            is_better = False # Worse or a full tie. Earlier name keeps it.
+
+        if is_better:
+            best_name = candidate
+            best_domain_size = domain_size
+            best_degree = degree
+
+    return best_name
 
 # Return var's current domain values as a list sorted by
 # least constraining value. Ties goes to smaller value first.
