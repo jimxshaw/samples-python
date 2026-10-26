@@ -130,9 +130,49 @@ def main():
         seen_clauses.add(frozenset(clause))
  
     # Execute the resolution loop.
-    # TODO
-
     found_contradiction = False
+    # Clause 1 has no ealier clause to pair with so start at 2.
+    i_index = 1
+
+    while i_index < len(clauses) and not found_contradiction:
+        clause_i = clauses[i_index]
+
+        # Try clause i against every earlier clause j with oldest first.
+        for j_index in range(i_index):
+            clause_j = clauses[j_index]
+
+            resolvent = resolve(clause_i, clause_j)
+
+            # No complementary pair or 2+ pairs means nothing produced.
+            if resolvent is None:
+                continue
+
+            # This is the safety net. A clause that is always True
+            # is never added.
+            if is_tautology(resolvent):
+                continue
+
+            # This is the redundant. The KB already has a clause with
+            # the same literals.
+            resolvent_frozen = frozenset(resolvent)
+            
+            if resolvent_frozen in seen_clauses:
+                continue
+
+            # It's new so add it, recording its parents {i, j}.
+            clauses.append(resolvent)
+            parents.append((i_index + 1, j_index + 1))
+            seen_clauses.add(resolvent_frozen)
+
+            # Empty clause means False means contradiction so
+            # the proof succeeded.
+            if len(resolvent) == 0:
+                found_contradiction = True
+                # Exits the for loop. The while condition
+                # exits the rest.
+                break
+
+        i_index += 1
  
     # Print the KB then the verdict.
     for index, clause in enumerate(clauses):
