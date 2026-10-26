@@ -55,7 +55,42 @@ def negate_goal(goal_clause):
 
 # Resolution.
 def resolve(clause_i, clause_j):
-    pass
+    # Find every complementary pair.
+    # Time complexity is O(1) membership checks.
+    clause_j_literals = set(clause_j)
+
+    clashing_literals_in_i = []
+
+    for literal in clause_i:
+        complement = negate_literal(literal)
+        if complement in clause_j_literals:
+            clashing_literals_in_i.append(literal)
+
+    # Exactly one clash or nothing useful.
+    number_of_clashes = len(clashing_literals_in_i)
+
+    if number_of_clashes != 1:
+        return None
+
+    # The single pair being resolved on.
+    literal_removed_from_i = clashing_literals_in_i[0] # E.g. 'z'.
+    literal_removed_from_j = negate_literal(literal_removed_from_i) # E.g. '~z'.
+
+    # Leftovers, clause_i's first then clause_j's.
+    leftover_literals = []
+
+    for literal in clause_i:
+        if literal != literal_removed_from_i:
+            leftover_literals.append(literal)
+
+    for literal in clause_j:
+        if literal != literal_removed_from_j:
+            leftover_literals.append(literal)
+
+    # Drop repeats. A () would mean Contradiction.
+    resolvent = remove_duplicate_literals(leftover_literals)
+
+    return resolvent
 
 # Output.
 def format_clause_line(clause_number, clause, parents):
