@@ -1,0 +1,7 @@
+1. ~Rain Wet {}
+2. Rain {}
+3. ~Wet {}
+4. Wet {2,1}
+5. ~Rain {3,1}
+6. Contradiction {4,3}
+Valid

@@ -1,0 +1,4 @@
+1. p {}
+2. ~p {}
+3. Contradiction {2,1}
+Valid
