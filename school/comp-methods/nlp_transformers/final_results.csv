@@ -1,0 +1,5 @@
+task,model,chosen_setting,results
+Summarization,facebook/bart-large-cnn,"map-reduce, beams=4, final min 180 tok",ROUGE-1 F1 0.360 | ROUGE-2 F1 0.047 | ROUGE-L F1 0.151 (Lead-3 baseline ROUGE-1 F1 0.275)
+Translation EN→FR,Helsinki-NLP/opus-mt-en-fr,"sentence-level, beams=4",Round-trip BLEU 53.0 / chrF 69.4 | vs Bué 1869 BLEU 16.4 / chrF 47.3
+Question answering,distilbert-base-cased-distilled-squad + MiniLM retriever,"dense retrieval, top_k=5",EM 0.533 | F1 0.731 | retrieval hit rate 1.000
+Text generation,gpt2,"top-p 0.9, temperature 0.8, 80 new tokens",Book perplexity 20.6 (distilgpt2 35.7) | generated perplexity 9.6 | distinct-2 0.94

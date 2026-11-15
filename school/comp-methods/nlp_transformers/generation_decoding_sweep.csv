@@ -1,0 +1,6 @@
+config,gen_perplexity,distinct_2,avg_words
+greedy,2.648,0.147,69.0
+beam_4,5.043,0.982,57.0
+top_k_50,19.72,0.975,67.333
+top_p_0.9_temp_0.8,9.644,0.94,67.667
+top_p_0.9_temp_1.2,18.11,0.96,68.0

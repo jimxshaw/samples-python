@@ -1,0 +1,5 @@
+chapter,english_paragraphs,aligned_pairs,BLEU,chrF
+1,30,22,16.5,47.6
+2,26,23,17.9,49.3
+3,48,43,14.4,44.4
+all,104,88,16.4,47.3

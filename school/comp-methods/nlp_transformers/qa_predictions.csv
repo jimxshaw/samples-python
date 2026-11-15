@@ -1,0 +1,121 @@
+retriever,top_k,question,gold,predicted
+tfidf,1,What was the jar labelled?,ORANGE MARMALADE,ORANGE MARMALADE
+tfidf,1,What colour were the White Rabbit's eyes?,pink,there's nothing written on the outside
+tfidf,1,What did the Rabbit take out of its waistcoat-pocket?,a watch,a watch
+tfidf,1,What was the name of Alice's cat?,Dinah,a dog's not mad
+tfidf,1,What kind of key did Alice find on the glass table?,a tiny golden key,golden key
+tfidf,1,How high was the little door?,about fifteen inches high,two feet
+tfidf,1,What did the label on the little bottle say?,DRINK ME,DRINK ME
+tfidf,1,What words were marked on the cake in currants?,EAT ME,EAT ME
+tfidf,1,What did the White Rabbit drop when Alice spoke to him?,white kid gloves,nothing written on the outside
+tfidf,1,What did Alice's tears form around her?,a large pool,a line along the sea-shore
+tfidf,1,What nationality did Alice guess the Mouse was?,French,"Latin Grammar, ""A mouse—of a mouse—to a mouse—a mouse"
+tfidf,1,What did Alice hand round as prizes?,comfits,a box of comfits
+tfidf,1,What prize did the Dodo give Alice?,thimble,one a-piece
+tfidf,1,Why didn't Alice drop the empty jar?,for fear of killing somebody underneath,fear of killing somebody underneath
+tfidf,1,Who suggested a Caucus-race to get everyone dry?,Dodo,the Dodo
+tfidf,3,What was the jar labelled?,ORANGE MARMALADE,ORANGE MARMALADE
+tfidf,3,What colour were the White Rabbit's eyes?,pink,white
+tfidf,3,What did the Rabbit take out of its waistcoat-pocket?,a watch,a watch
+tfidf,3,What was the name of Alice's cat?,Dinah,Cheshire Puss
+tfidf,3,What kind of key did Alice find on the glass table?,a tiny golden key,golden key
+tfidf,3,How high was the little door?,about fifteen inches high,fifteen inches
+tfidf,3,What did the label on the little bottle say?,DRINK ME,DRINK ME
+tfidf,3,What words were marked on the cake in currants?,EAT ME,EAT ME
+tfidf,3,What did the White Rabbit drop when Alice spoke to him?,white kid gloves,white kid gloves and the fan
+tfidf,3,What did Alice's tears form around her?,a large pool,a line along the sea-shore
+tfidf,3,What nationality did Alice guess the Mouse was?,French,C and D
+tfidf,3,What did Alice hand round as prizes?,comfits,refreshments
+tfidf,3,What prize did the Dodo give Alice?,thimble,Caucus-race
+tfidf,3,Why didn't Alice drop the empty jar?,for fear of killing somebody underneath,fear of killing somebody underneath
+tfidf,3,Who suggested a Caucus-race to get everyone dry?,Dodo,the Dodo
+tfidf,5,What was the jar labelled?,ORANGE MARMALADE,ORANGE MARMALADE
+tfidf,5,What colour were the White Rabbit's eyes?,pink,pink
+tfidf,5,What did the Rabbit take out of its waistcoat-pocket?,a watch,a watch
+tfidf,5,What was the name of Alice's cat?,Dinah,Cheshire Cat
+tfidf,5,What kind of key did Alice find on the glass table?,a tiny golden key,golden key
+tfidf,5,How high was the little door?,about fifteen inches high,fifteen inches
+tfidf,5,What did the label on the little bottle say?,DRINK ME,DRINK ME
+tfidf,5,What words were marked on the cake in currants?,EAT ME,EAT ME
+tfidf,5,What did the White Rabbit drop when Alice spoke to him?,white kid gloves,white kid gloves and the fan
+tfidf,5,What did Alice's tears form around her?,a large pool,sobbing
+tfidf,5,What nationality did Alice guess the Mouse was?,French,C and D
+tfidf,5,What did Alice hand round as prizes?,comfits,refreshments
+tfidf,5,What prize did the Dodo give Alice?,thimble,Caucus-race
+tfidf,5,Why didn't Alice drop the empty jar?,for fear of killing somebody underneath,fear of killing somebody underneath
+tfidf,5,Who suggested a Caucus-race to get everyone dry?,Dodo,the Dodo
+tfidf,10,What was the jar labelled?,ORANGE MARMALADE,ORANGE MARMALADE
+tfidf,10,What colour were the White Rabbit's eyes?,pink,pink
+tfidf,10,What did the Rabbit take out of its waistcoat-pocket?,a watch,a watch
+tfidf,10,What was the name of Alice's cat?,Dinah,Cheshire Cat
+tfidf,10,What kind of key did Alice find on the glass table?,a tiny golden key,golden key
+tfidf,10,How high was the little door?,about fifteen inches high,four feet
+tfidf,10,What did the label on the little bottle say?,DRINK ME,DRINK ME
+tfidf,10,What words were marked on the cake in currants?,EAT ME,EAT ME
+tfidf,10,What did the White Rabbit drop when Alice spoke to him?,white kid gloves,white kid gloves and the fan
+tfidf,10,What did Alice's tears form around her?,a large pool,large pool
+tfidf,10,What nationality did Alice guess the Mouse was?,French,French
+tfidf,10,What did Alice hand round as prizes?,comfits,refreshments
+tfidf,10,What prize did the Dodo give Alice?,thimble,Caucus-race
+tfidf,10,Why didn't Alice drop the empty jar?,for fear of killing somebody underneath,fear of killing somebody underneath
+tfidf,10,Who suggested a Caucus-race to get everyone dry?,Dodo,the Dodo
+dense,1,What was the jar labelled?,ORANGE MARMALADE,ORANGE MARMALADE
+dense,1,What colour were the White Rabbit's eyes?,pink,white
+dense,1,What did the Rabbit take out of its waistcoat-pocket?,a watch,white kid gloves
+dense,1,What was the name of Alice's cat?,Dinah,Cheshire Puss
+dense,1,What kind of key did Alice find on the glass table?,a tiny golden key,golden
+dense,1,How high was the little door?,about fifteen inches high,fifteen inches
+dense,1,What did the label on the little bottle say?,DRINK ME,DRINK ME
+dense,1,What words were marked on the cake in currants?,EAT ME,EAT ME
+dense,1,What did the White Rabbit drop when Alice spoke to him?,white kid gloves,white kid gloves and the fan
+dense,1,What did Alice's tears form around her?,a large pool,large pool
+dense,1,What nationality did Alice guess the Mouse was?,French,"Latin Grammar, ""A mouse—of a mouse—to a mouse—a mouse"
+dense,1,What did Alice hand round as prizes?,comfits,a box of comfits
+dense,1,What prize did the Dodo give Alice?,thimble,one a-piece
+dense,1,Why didn't Alice drop the empty jar?,for fear of killing somebody underneath,fear of killing somebody underneath
+dense,1,Who suggested a Caucus-race to get everyone dry?,Dodo,Lory
+dense,3,What was the jar labelled?,ORANGE MARMALADE,ORANGE MARMALADE
+dense,3,What colour were the White Rabbit's eyes?,pink,pink
+dense,3,What did the Rabbit take out of its waistcoat-pocket?,a watch,a watch
+dense,3,What was the name of Alice's cat?,Dinah,Cheshire Puss
+dense,3,What kind of key did Alice find on the glass table?,a tiny golden key,golden key
+dense,3,How high was the little door?,about fifteen inches high,fifteen inches
+dense,3,What did the label on the little bottle say?,DRINK ME,DRINK ME
+dense,3,What words were marked on the cake in currants?,EAT ME,EAT ME
+dense,3,What did the White Rabbit drop when Alice spoke to him?,white kid gloves,white kid gloves and the fan
+dense,3,What did Alice's tears form around her?,a large pool,large pool
+dense,3,What nationality did Alice guess the Mouse was?,French,C and D
+dense,3,What did Alice hand round as prizes?,comfits,a box of comfits
+dense,3,What prize did the Dodo give Alice?,thimble,one a-piece
+dense,3,Why didn't Alice drop the empty jar?,for fear of killing somebody underneath,fear of killing somebody underneath
+dense,3,Who suggested a Caucus-race to get everyone dry?,Dodo,the Dodo
+dense,5,What was the jar labelled?,ORANGE MARMALADE,ORANGE MARMALADE
+dense,5,What colour were the White Rabbit's eyes?,pink,pink
+dense,5,What did the Rabbit take out of its waistcoat-pocket?,a watch,a watch
+dense,5,What was the name of Alice's cat?,Dinah,Cheshire Cat
+dense,5,What kind of key did Alice find on the glass table?,a tiny golden key,golden key
+dense,5,How high was the little door?,about fifteen inches high,four feet
+dense,5,What did the label on the little bottle say?,DRINK ME,DRINK ME
+dense,5,What words were marked on the cake in currants?,EAT ME,EAT ME
+dense,5,What did the White Rabbit drop when Alice spoke to him?,white kid gloves,white kid gloves and the fan
+dense,5,What did Alice's tears form around her?,a large pool,large pool
+dense,5,What nationality did Alice guess the Mouse was?,French,French
+dense,5,What did Alice hand round as prizes?,comfits,a box of comfits
+dense,5,What prize did the Dodo give Alice?,thimble,golden key
+dense,5,Why didn't Alice drop the empty jar?,for fear of killing somebody underneath,fear of killing somebody underneath
+dense,5,Who suggested a Caucus-race to get everyone dry?,Dodo,the Dodo
+dense,10,What was the jar labelled?,ORANGE MARMALADE,ORANGE MARMALADE
+dense,10,What colour were the White Rabbit's eyes?,pink,pink
+dense,10,What did the Rabbit take out of its waistcoat-pocket?,a watch,a watch
+dense,10,What was the name of Alice's cat?,Dinah,Cheshire Cat
+dense,10,What kind of key did Alice find on the glass table?,a tiny golden key,golden key
+dense,10,How high was the little door?,about fifteen inches high,four feet
+dense,10,What did the label on the little bottle say?,DRINK ME,DRINK ME
+dense,10,What words were marked on the cake in currants?,EAT ME,EAT ME
+dense,10,What did the White Rabbit drop when Alice spoke to him?,white kid gloves,white kid gloves and the fan
+dense,10,What did Alice's tears form around her?,a large pool,large pool
+dense,10,What nationality did Alice guess the Mouse was?,French,French
+dense,10,What did Alice hand round as prizes?,comfits,a box of comfits
+dense,10,What prize did the Dodo give Alice?,thimble,a hundred pounds
+dense,10,Why didn't Alice drop the empty jar?,for fear of killing somebody underneath,fear of killing somebody underneath
+dense,10,Who suggested a Caucus-race to get everyone dry?,Dodo,the Dodo
