@@ -1,0 +1,3 @@
+num_beams,aligned_pairs,BLEU_vs_bue,chrF_vs_bue,sec_per_60_sentences
+1,88,16.38,46.72,12.97
+4,88,16.4,47.28,41.64

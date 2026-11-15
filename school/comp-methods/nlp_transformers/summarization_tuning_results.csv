@@ -1,0 +1,6 @@
+,avg_words,rouge1_precision,rouge1_recall,rouge1_f1,rouge2_f1,rougeL_f1
+Lead-3 baseline,117.0,0.35,0.233,0.275,0.032,0.126
+BART reduce min60 (original),56.667,0.495,0.154,0.234,0.031,0.131
+BART map-only (concat chunks),213.333,0.345,0.394,0.366,0.046,0.156
+BART reduce min120,98.667,0.431,0.231,0.3,0.036,0.153
+BART reduce min180,144.667,0.407,0.323,0.36,0.047,0.151
