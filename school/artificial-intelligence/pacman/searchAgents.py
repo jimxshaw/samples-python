@@ -625,7 +625,19 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # In this problem the state is just Pacman's (x, y) position. Unlike
+        # FoodSearchProblem, there is no food grid carried inside the state.
+        # The food grid was stored once on the problem itself in __init__
+        # as self.food and it never changes during this single search.
+
+        # Here, self.food is a grid of True or False values indexed as food[x][y].
+        # True means there is a food dot at that position.
+        isThereFoodAtThisPosition = self.food[x][y]
+
+        # The goal is "stand on any square that has food". We don't care
+        # which dot it is. Whichever food square the search reaches first
+        # counts as the goal.
+        return isThereFoodAtThisPosition
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
     """
