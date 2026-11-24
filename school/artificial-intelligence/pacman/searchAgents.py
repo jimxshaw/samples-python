@@ -558,7 +558,50 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    # Heuristic: the true maze, walking, distance from pacman to the farthest remaining
+    # food dot.
+    # It never overestimates because no matter what order pacman eats the remaining dots,
+    # he must at some point stand on the farthest dot. Getting there takes at least the
+    # maze distance to it. So the real remaining cost is always >= our estimate.
+    # It's consistent (h(n) <= stepCost + h(n')) because one step) changes pacman's
+    # maze distance to any single dot by at most 1. Eating a dot only removes candidates
+    # from the farthest comparison so the maximum can only stay the same or shrink.
+    # So h drops by at most 1 per step, which is exactly the step cost.
+
+    # Turn the True/False food grid into a plain list of (x, y) coordinates.
+    remainingFoodPositions = foodGrid.asList()
+
+    # The mazeDistance runs a full BFS every time it is called, which is slow.
+    # problem.heuristicInfo is a dictionary that survives between heuristic
+    # calls so we use it as a cache. We create the cache only the first time.
+    if "mazeDistanceCache" not in problem.heuristicInfo:
+        problem.heuristicInfo["mazeDistanceCache"] = {}
+
+    mazeDistanceCache = problem.heuristicInfo["mazeDistanceCache"]
+
+    # Track the largest maze distance seen so far.
+    distanceToFarthestFood = 0
+
+    for foodPosition in remainingFoodPositions:
+        # The cache key is the (from, to) pair of positions.
+        cacheKey = (position, foodPosition)
+
+        if cacheKey in mazeDistanceCache:
+            # We already computed this distance earlier so reuse it.
+            distanceToThisFood = mazeDistanceCache[cacheKey]
+        else:
+            # First time seeing this pair: compute it with BFS then save it.
+            # mazeDistance needs a gameState only to read the walls so the
+            # starting game state stored on the problem works fine.
+            distanceToThisFood = mazeDistance(position, foodPosition, problem.startingGameState)
+            mazeDistanceCache[cacheKey] = distanceToThisFood
+
+        # Keep whichever dot is farthest away.
+        if distanceToThisFood > distanceToFarthestFood:
+            distanceToFarthestFood = distanceToThisFood
+
+    # Never negative because distances are >= 0 and 0 only at the goal.
+    return distanceToFarthestFood
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -589,7 +632,23 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # The AnyFoodSearchProblem above already knows where pacman starts,
+        # where the walls are and because of our goal test that any food
+        # square counts as a goal. All we have to do is choose a search
+        # algorithm that is guaranteed to reach the closest goal first.
+
+        # Use BFS because every step in this maze costs 1. BFS expands nodes level
+        # by level so every square is 1 step away then every square is 2 steps 
+        # away and so on, like a water ripple spreading out from pacman. 
+        # So the first food square BFS pops off the frontier is the one with 
+        # the fewest steps from pacman.
+        pathToClosestDot = search.breadthFirstSearch(problem)
+
+        # This is a list of actions like ['North', 'North', 'West'].
+        # The ClosestDotSearchAgent calls this function repeatedly: walk to
+        # the nearest dot, eat it, find the next nearest dot and so on
+        # until there is no food left.
+        return pathToClosestDot
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -625,7 +684,19 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # In this problem the state is just Pacman's (x, y) position. Unlike
+        # FoodSearchProblem, there is no food grid carried inside the state.
+        # The food grid was stored once on the problem itself in __init__
+        # as self.food and it never changes during this single search.
+
+        # Here, self.food is a grid of True or False values indexed as food[x][y].
+        # True means there is a food dot at that position.
+        isThereFoodAtThisPosition = self.food[x][y]
+
+        # The goal is "stand on any square that has food". We don't care
+        # which dot it is. Whichever food square the search reaches first
+        # counts as the goal.
+        return isThereFoodAtThisPosition
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
     """
