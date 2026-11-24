@@ -558,7 +558,50 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    # Heuristic: the true maze, walking, distance from pacman to the farthest remaining
+    # food dot.
+    # It never overestimates because no matter what order pacman eats the remaining dots,
+    # he must at some point stand on the farthest dot. Getting there takes at least the
+    # maze distance to it. So the real remaining cost is always >= our estimate.
+    # It's consistent (h(n) <= stepCost + h(n')) because one step) changes pacman's
+    # maze distance to any single dot by at most 1. Eating a dot only removes candidates
+    # from the farthest comparison so the maximum can only stay the same or shrink.
+    # So h drops by at most 1 per step, which is exactly the step cost.
+
+    # Turn the True/False food grid into a plain list of (x, y) coordinates.
+    remainingFoodPositions = foodGrid.asList()
+
+    # The mazeDistance runs a full BFS every time it is called, which is slow.
+    # problem.heuristicInfo is a dictionary that survives between heuristic
+    # calls so we use it as a cache. We create the cache only the first time.
+    if "mazeDistanceCache" not in problem.heuristicInfo:
+        problem.heuristicInfo["mazeDistanceCache"] = {}
+
+    mazeDistanceCache = problem.heuristicInfo["mazeDistanceCache"]
+
+    # Track the largest maze distance seen so far.
+    distanceToFarthestFood = 0
+
+    for foodPosition in remainingFoodPositions:
+        # The cache key is the (from, to) pair of positions.
+        cacheKey = (position, foodPosition)
+
+        if cacheKey in mazeDistanceCache:
+            # We already computed this distance earlier so reuse it.
+            distanceToThisFood = mazeDistanceCache[cacheKey]
+        else:
+            # First time seeing this pair: compute it with BFS then save it.
+            # mazeDistance needs a gameState only to read the walls so the
+            # starting game state stored on the problem works fine.
+            distanceToThisFood = mazeDistance(position, foodPosition, problem.startingGameState)
+            mazeDistanceCache[cacheKey] = distanceToThisFood
+
+        # Keep whichever dot is farthest away.
+        if distanceToThisFood > distanceToFarthestFood:
+            distanceToFarthestFood = distanceToThisFood
+
+    # Never negative because distances are >= 0 and 0 only at the goal.
+    return distanceToFarthestFood
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
