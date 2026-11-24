@@ -589,7 +589,23 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # The AnyFoodSearchProblem above already knows where pacman starts,
+        # where the walls are and because of our goal test that any food
+        # square counts as a goal. All we have to do is choose a search
+        # algorithm that is guaranteed to reach the closest goal first.
+
+        # Use BFS because every step in this maze costs 1. BFS expands nodes level
+        # by level so every square is 1 step away then every square is 2 steps 
+        # away and so on, like a water ripple spreading out from pacman. 
+        # So the first food square BFS pops off the frontier is the one with 
+        # the fewest steps from pacman.
+        pathToClosestDot = search.breadthFirstSearch(problem)
+
+        # This is a list of actions like ['North', 'North', 'West'].
+        # The ClosestDotSearchAgent calls this function repeatedly: walk to
+        # the nearest dot, eat it, find the next nearest dot and so on
+        # until there is no food left.
+        return pathToClosestDot
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
